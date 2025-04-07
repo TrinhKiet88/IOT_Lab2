@@ -1,0 +1,8 @@
+{
+    "idf.portWin": "COM5",
+    "idf.openOcdConfigs": [
+        "board/esp32s3-bridge.cfg"
+    ],
+    "C_Cpp.errorSquiggles": "disabled",
+    "cmake.sourceDirectory": "D:/BKU/Year 3/242/IOT/coreiot_lab/YoloUNO_PlatformIO-Thingsboard/lib/ArduinoJson/src"
+}
