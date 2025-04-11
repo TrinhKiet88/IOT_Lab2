@@ -1,4 +1,4 @@
-#define LED_PIN 48
+#define LED_PIN 13
 #define SDA_PIN GPIO_NUM_11
 #define SCL_PIN GPIO_NUM_12
 #include <WiFi.h>
@@ -13,8 +13,8 @@
 #include "freertos/task.h"
 
 
-constexpr char WIFI_SSID[] = "Min";
-constexpr char WIFI_PASSWORD[] = "123456789";
+constexpr char WIFI_SSID[] = "ACLAB";
+constexpr char WIFI_PASSWORD[] = "ACLAB2023";
 
 constexpr char TOKEN[] = "s5cob74hx2hwze5s63n5";
 
@@ -30,7 +30,7 @@ constexpr char LED_STATE_ATTR[] = "ledState";
 
 volatile bool attributesChanged = false;
 volatile int ledMode = 0;
-volatile bool ledState = false;
+volatile bool ledState = false; 
 volatile uint16_t blinkingInterval = 5000;
 volatile int ledmode = 0;
 
@@ -50,7 +50,32 @@ void requestSharedAttributes() {
   tb.Shared_Attributes_Request(Attribute_Request_Callback(onAttributesReceived));
 }
 
-DHT dht11(8, DHT11);  // Initialize DHT11 sensor on GPIO14 (adjust GPIO as needed)
+DHT dht11(27, DHT11);  // Initialize DHT11 sensor on GPIO14 (adjust GPIO as needed)
+
+void InitWiFi() {
+  Serial.println("Connecting...");
+  // Attempting to establish a connection to the given WiFi network
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+    // Delay 500ms until a connection has been successfully established
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("Connected");
+  vTaskDelay(pdMS_TO_TICKS(10000));
+
+}
+
+const bool reconnect() {
+  // Check to ensure we aren't connected yet
+  const wl_status_t status = WiFi.status();
+  if (status == WL_CONNECTED) {
+    return true;
+  }
+  // If we aren't establish a new connection to the given WiFi network
+  InitWiFi();
+  return true;
+}
 
 RPC_Response setLedModeCallback(const RPC_Data &data) {
   Serial.println("Received RPC call: setLedMode");
@@ -66,29 +91,6 @@ RPC_Response setLedModeCallback(const RPC_Data &data) {
 
   Serial.println(" Error: No ledMode parameter found in RPC call.");
   return RPC_Response("Error: No ledMode parameter", false);
-}
-
-void InitWiFi() {
-  Serial.println("Connecting...");
-  // Attempting to establish a connection to the given WiFi network
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  while (WiFi.status() != WL_CONNECTED) {
-    // Delay 500ms until a connection has been successfully established
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("Connected");
-}
-
-const bool reconnect() {
-  // Check to ensure we aren't connected yet
-  const wl_status_t status = WiFi.status();
-  if (status == WL_CONNECTED) {
-    return true;
-  }
-  // If we aren't establish a new connection to the given WiFi network
-  InitWiFi();
-  return true;
 }
 
 void Task_DHT(void *pvParameters){
@@ -130,7 +132,7 @@ void Task_MQTT(void *pvParameters){
   if (!tb.connected()) {
     Serial.println("Connecting to...");
     if (!tb.connect(THINGSBOARD_SERVER, TOKEN, THINGSBOARD_PORT)) {
-        Serial.println("Failed to connect ");
+        Serial.println("Failed to connect!");
         vTaskDelay(pdMS_TO_TICKS(5000));
         continue;
     }
@@ -148,14 +150,14 @@ vTaskDelay(pdMS_TO_TICKS(500));
 void Task_LED(void *pvParameters){
   Serial.println("Task LED started");
   while (1) {
-    if (ledMode == 1) {
+    if (ledMode == 0) {
       digitalWrite(LED_PIN, HIGH);
-      Serial.println("LED is ON"); 
-      vTaskDelay(pdMS_TO_TICKS(blinkingInterval));
+      Serial.println("LED is OFF"); 
+      vTaskDelay(1000);
     } else {
       digitalWrite(LED_PIN, LOW);
-      Serial.println("LED is OFF");
-      vTaskDelay(pdMS_TO_TICKS(blinkingInterval));
+      Serial.println("LED is ON");
+      vTaskDelay(1000);
     }
   }
 }
@@ -163,21 +165,19 @@ void Task_LED(void *pvParameters){
 
 void setup() {
   Serial.begin(SERIAL_DEBUG_BAUD);
-  InitWiFi();
+  // InitWiFi();
   pinMode(LED_PIN, OUTPUT);
-  Serial.println("Hello World");
-  Wire.begin(SDA_PIN, SCL_PIN);
+  // Wire.begin(SDA_PIN, SCL_PIN);
   dht11.begin();  // Initialize DHT11 sensor
 
   xTaskCreate(Task_Wifi, "Task Wifi", 10000, NULL, 1, NULL);
-  xTaskCreate(Task_LED, "Task LED", 10000, NULL, 1, NULL);
-  xTaskCreate(Task_MQTT, "Task MQTT", 10000, NULL, 3, NULL);
-  xTaskCreate(Task_DHT, "Task DHT", 10000, NULL, 2, NULL);
+  xTaskCreate(Task_LED, "Task LED", 1000, NULL, 1, NULL);
+  xTaskCreate(Task_MQTT, "Task MQTT", 5000, NULL, 2, NULL);
+  xTaskCreate(Task_DHT, "Task DHT", 5000, NULL, 2, NULL);
 
 }
 
 void loop() {
-  vTaskDelete(NULL);
 }
 
 
