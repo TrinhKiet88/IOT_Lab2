@@ -445,47 +445,6 @@
         },
         "id": "b62b0189-dd78-63d6-4057-211bb82a395f"
       },
-      "2244ec74-bbd7-5d3d-3c79-f2b9cc6d7324": {
-        "typeFullFqn": "system.control_widgets.update_attributes",
-        "type": "rpc",
-        "sizeX": 4,
-        "sizeY": 2,
-        "config": {
-          "showTitle": false,
-          "backgroundColor": "#e6e7e8",
-          "color": "rgba(0, 0, 0, 0.87)",
-          "padding": "0px",
-          "settings": {
-            "styleButton": {
-              "isRaised": true,
-              "isPrimary": false
-            },
-            "entityParameters": "{}",
-            "entityAttributeType": "SERVER_SCOPE",
-            "buttonText": "Update device attribute"
-          },
-          "title": "Update device attribute",
-          "dropShadow": true,
-          "enableFullscreen": false,
-          "widgetStyle": {},
-          "titleStyle": {
-            "fontSize": "16px",
-            "fontWeight": 400
-          },
-          "useDashboardTimewindow": true,
-          "showLegend": false,
-          "actions": {},
-          "targetDeviceAliases": [],
-          "datasources": [],
-          "targetDevice": {
-            "type": "device",
-            "deviceId": "ba321000-e149-11ef-ad09-515f790ed9df"
-          }
-        },
-        "row": 0,
-        "col": 0,
-        "id": "2244ec74-bbd7-5d3d-3c79-f2b9cc6d7324"
-      },
       "93e57845-edfa-968e-7bcf-3e96c7143afc": {
         "typeFullFqn": "system.control_widgets.rpcbutton",
         "type": "rpc",
@@ -498,15 +457,21 @@
           "color": "rgba(0, 0, 0, 0.87)",
           "padding": "0px",
           "settings": {
-            "requestTimeout": 5000,
+            "title": "",
+            "buttonText": "Turn on LED",
             "oneWayElseTwoWay": true,
-            "buttonText": "Send RPC",
+            "methodName": "setLedMode",
+            "methodParams": "{\r\n  \"method\": \"setLedMode\",\r\n  \"params\": {\r\n    \"ledMode\": 1\r\n  }\r\n}\r\n",
+            "requestTimeout": 5000,
+            "showError": false,
+            "requestPersistent": false,
+            "persistentPollingInterval": 5000,
             "styleButton": {
               "isRaised": true,
-              "isPrimary": false
-            },
-            "methodName": "rpcCommand",
-            "methodParams": "{}"
+              "isPrimary": false,
+              "bgColor": null,
+              "textColor": null
+            }
           },
           "title": "RPC Button",
           "dropShadow": true,
@@ -529,41 +494,45 @@
         "col": 0,
         "id": "93e57845-edfa-968e-7bcf-3e96c7143afc"
       },
-      "62ece3b9-b1d5-0ee8-8f34-c4939fabd509": {
-        "typeFullFqn": "system.control_widgets.persistent_table",
+      "ab92ad2d-a756-a26c-a275-c4f3e98fee7c": {
+        "typeFullFqn": "system.control_widgets.rpcbutton",
         "type": "rpc",
-        "sizeX": 7.5,
-        "sizeY": 4,
+        "sizeX": 4,
+        "sizeY": 2,
         "config": {
-          "showTitle": true,
-          "backgroundColor": "#fff",
+          "targetDeviceAliases": [],
+          "showTitle": false,
+          "backgroundColor": "#e6e7e8",
           "color": "rgba(0, 0, 0, 0.87)",
-          "padding": "8px",
+          "padding": "0px",
           "settings": {
-            "enableStickyAction": true,
-            "enableFilter": true,
-            "displayPagination": true,
-            "defaultPageSize": 10,
-            "enableStickyHeader": true,
-            "displayColumns": [
-              "rpcId",
-              "messageType",
-              "status",
-              "method",
-              "createdTime",
-              "expirationTime"
-            ],
-            "displayDetails": true,
-            "defaultSortOrder": "-createdTime",
-            "allowSendRequest": true,
-            "allowDelete": true
+            "title": "",
+            "buttonText": "Turn off LED",
+            "oneWayElseTwoWay": true,
+            "methodName": "setLedMode",
+            "methodParams": "{\r\n  \"method\": \"setLedMode\",\r\n  \"params\": {\r\n    \"ledMode\": 0\r\n  }\r\n}\r\n",
+            "requestTimeout": 5000,
+            "showError": false,
+            "requestPersistent": false,
+            "persistentPollingInterval": 5000,
+            "styleButton": {
+              "isRaised": true,
+              "isPrimary": false,
+              "bgColor": null,
+              "textColor": null
+            }
           },
-          "title": "Persistent RPC table",
+          "title": "RPC Button",
+          "dropShadow": true,
+          "enableFullscreen": false,
+          "widgetStyle": {},
           "titleStyle": {
             "fontSize": "16px",
-            "fontWeight": 400,
-            "padding": "5px 10px"
+            "fontWeight": 400
           },
+          "useDashboardTimewindow": true,
+          "showLegend": false,
+          "actions": {},
           "datasources": [],
           "targetDevice": {
             "type": "device",
@@ -572,7 +541,7 @@
         },
         "row": 0,
         "col": 0,
-        "id": "62ece3b9-b1d5-0ee8-8f34-c4939fabd509"
+        "id": "ab92ad2d-a756-a26c-a275-c4f3e98fee7c"
       }
     },
     "states": {
@@ -600,23 +569,17 @@
                 "row": 0,
                 "col": 10
               },
-              "2244ec74-bbd7-5d3d-3c79-f2b9cc6d7324": {
-                "sizeX": 5,
-                "sizeY": 2,
-                "row": 8,
-                "col": 4
-              },
               "93e57845-edfa-968e-7bcf-3e96c7143afc": {
                 "sizeX": 5,
                 "sizeY": 2,
                 "row": 6,
                 "col": 4
               },
-              "62ece3b9-b1d5-0ee8-8f34-c4939fabd509": {
-                "sizeX": 11,
-                "sizeY": 5,
-                "row": 5,
-                "col": 10
+              "ab92ad2d-a756-a26c-a275-c4f3e98fee7c": {
+                "sizeX": 5,
+                "sizeY": 2,
+                "row": 8,
+                "col": 4
               }
             },
             "gridSettings": {
